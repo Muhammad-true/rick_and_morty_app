@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty_app/features/character/character.dart';
+import 'package:rick_and_morty_app/features/favorites/bloc/bloc/favorites_bloc.dart';
 
 class CharacterPage extends StatelessWidget {
   const CharacterPage({super.key});
@@ -24,14 +25,37 @@ class CharacterPage extends StatelessWidget {
                 itemCount: state.character.length,
                 itemBuilder: (context, index) {
                   final character = state.character[index];
-                  return ListTile(
-                    leading: Image.network(
-                      character.image,
-                      width: 50,
-                      height: 50,
-                    ),
-                    title: Text(character.name),
-                    subtitle: Text('${character.status}-${character.species}'),
+                  return BlocBuilder<FavoritesBloc, FavoritesState>(
+                    builder: (context, favstate) {
+                      final isFavorite =
+                          favstate is FavoritesLoaded &&
+                          favstate.favorites.any((c) => c.id == character.id);
+                      return ListTile(
+                        leading: Image.network(
+                          character.image,
+                          width: 50,
+                          height: 50,
+                        ),
+                        title: Text(character.name),
+                        subtitle: Text(
+                          '${character.status}-${character.species}',
+                        ),
+                        trailing: IconButton(
+                          onPressed: () {
+                            final bloc = context.read<FavoritesBloc>();
+                            if (isFavorite) {
+                              bloc.add(RemoveFavorites(character: character));
+                            } else {
+                              bloc.add(AddFavorites(character: character));
+                            }
+                          },
+                          icon: Icon(
+                            isFavorite ? Icons.star : Icons.star_border,
+                            color: isFavorite ? Colors.amber : null,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               );
