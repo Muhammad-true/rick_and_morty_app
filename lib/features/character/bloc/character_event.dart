@@ -8,3 +8,5 @@ sealed class CharacterEvent extends Equatable {
 }
 
 class LoadCharacters extends CharacterEvent {}
+
+class MoreLoadCharacters extends CharacterEvent {}

@@ -16,17 +16,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(create: (_) => CharacterRepository()),
-        BlocProvider(create: (_) => FavoritesBloc()..add(LoadFavorites())),
-      ],
-      child: MaterialApp(
-        title: 'Rick and Morty',
-        themeMode: ThemeMode.system,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.lightTheme,
-        debugShowCheckedModeBanner: false,
-        home: MainScaffold(),
+      providers: [RepositoryProvider(create: (_) => CharacterRepository())],
+      child: Builder(
+        builder: (context) {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => FavoritesBloc()..add(LoadFavorites()),
+              ),
+              BlocProvider(
+                create:
+                    (_) => CharacterBloc(context.read<CharacterRepository>()),
+              ),
+            ],
+            child: MaterialApp(
+              title: 'Rick and Morty',
+              themeMode: ThemeMode.system,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.lightTheme,
+              debugShowCheckedModeBanner: false,
+              home: MainScaffold(),
+            ),
+          );
+        },
       ),
     );
   }

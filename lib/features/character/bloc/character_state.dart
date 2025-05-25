@@ -13,11 +13,29 @@ class CharacterLoading extends CharacterState {}
 
 class CharacterLoaded extends CharacterState {
   final List<Character> character;
+  final int currentPage;
+  final bool hasReachedEnd;
 
-  const CharacterLoaded({required this.character});
+  const CharacterLoaded({
+    required this.character,
+    required this.currentPage,
+    required this.hasReachedEnd,
+  });
+
+  CharacterLoaded copyWith({
+    List<Character>? character,
+    int? currentPage,
+    bool? hasReachedEnd,
+  }) {
+    return CharacterLoaded(
+      character: character ?? this.character,
+      currentPage: currentPage ?? this.currentPage,
+      hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
+    );
+  }
 
   @override
-  List<Object> get props => [character];
+  List<Object> get props => [character, currentPage, hasReachedEnd];
 }
 
 class CharacterError extends CharacterState {
