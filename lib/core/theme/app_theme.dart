@@ -36,6 +36,7 @@ class AppTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
+      dividerTheme: DividerThemeData(),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         selectedItemColor: _lightIconActive,
         unselectedItemColor: _lightIconInactive,

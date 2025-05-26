@@ -7,6 +7,7 @@ import 'package:rick_and_morty_app/data/repositories/character_repository.dart';
 import 'package:rick_and_morty_app/features/character/character.dart';
 import 'package:rick_and_morty_app/features/favorites/bloc/bloc/favorites_bloc.dart';
 import 'package:rick_and_morty_app/features/favorites/view/favorites_page.dart';
+import 'package:rick_and_morty_app/features/themeBloc/bloc/theme_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized;
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         builder: (context) {
           return MultiBlocProvider(
             providers: [
+              BlocProvider(create: (_) => ThemeBloc()),
               BlocProvider(
                 create: (_) => FavoritesBloc()..add(LoadFavorites()),
               ),
@@ -35,13 +37,18 @@ class MyApp extends StatelessWidget {
                     (_) => CharacterBloc(context.read<CharacterRepository>()),
               ),
             ],
-            child: MaterialApp(
-              title: 'Rick and Morty',
-              themeMode: ThemeMode.system,
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.lightTheme,
-              debugShowCheckedModeBanner: false,
-              home: MainScaffold(),
+            child: BlocBuilder<ThemeBloc, ThemeState>(
+              builder: (context, themestate) {
+                return MaterialApp(
+                  title: 'Rick and Morty',
+                  themeMode:
+                      themestate.isDark ? ThemeMode.dark : ThemeMode.light,
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  debugShowCheckedModeBanner: false,
+                  home: MainScaffold(),
+                );
+              },
             ),
           );
         },
@@ -63,6 +70,17 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            tooltip: 'Переключить тему',
+            onPressed: () {
+              context.read<ThemeBloc>().add(ToggleTheme());
+            },
+          ),
+        ],
+      ),
       body: pages[index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
