@@ -10,10 +10,11 @@ part 'favorites_event.dart';
 part 'favorites_state.dart';
 
 class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
-  FavoritesBloc() : super(FavoritesInitial()) {
+  FavoritesBloc() : super(FavoritesLoaded(favorites: [])) {
     on<LoadFavorites>(_onLoad);
     on<AddFavorites>(_onAdd);
     on<RemoveFavorites>(_onRemove);
+    on<SortFavorites>(_onSortFavorites);
   }
 
   Future<void> _onLoad(
@@ -63,5 +64,24 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
             )
             .toList();
     await pref.setStringList('favorites', jsonList);
+  }
+
+  FutureOr<void> _onSortFavorites(
+    SortFavorites event,
+    Emitter<FavoritesState> emit,
+  ) {
+    final currentState = state;
+    if (currentState is FavoritesLoaded) {
+      final sorted = [...currentState.favorites];
+      switch (event.sortType) {
+        case SortType.name:
+          sorted.sort((a, b) => a.name.compareTo(b.name));
+          break;
+        case (SortType.status):
+          sorted.sort((a, b) => a.status.compareTo(b.status));
+          break;
+      }
+      emit(FavoritesLoaded(favorites: sorted, sortType: event.sortType));
+    }
   }
 }

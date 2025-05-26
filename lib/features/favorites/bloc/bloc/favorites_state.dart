@@ -13,10 +13,14 @@ class FavoritesLoading extends FavoritesState {}
 
 class FavoritesLoaded extends FavoritesState {
   final List<Character> favorites;
+  final SortType sortType;
 
-  const FavoritesLoaded({required this.favorites});
+  const FavoritesLoaded({
+    required this.favorites,
+    this.sortType = SortType.name,
+  });
   @override
-  List<Object> get props => [favorites];
+  List<Object> get props => [favorites, sortType];
 }
 
 class FavoritesError extends FavoritesState {

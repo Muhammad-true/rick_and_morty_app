@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:rick_and_morty_app/core/models/character.dart';
 import 'package:rick_and_morty_app/core/theme/app_theme.dart';
 import 'package:rick_and_morty_app/data/repositories/character_repository.dart';
 import 'package:rick_and_morty_app/features/character/character.dart';
 import 'package:rick_and_morty_app/features/favorites/bloc/bloc/favorites_bloc.dart';
 import 'package:rick_and_morty_app/features/favorites/view/favorites_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized;
+  await Hive.initFlutter();
+  Hive.registerAdapter(CharacterAdapter());
+  await Hive.openBox<Character>('characterBox');
   runApp(const MyApp());
 }
 

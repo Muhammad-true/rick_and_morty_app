@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty_app/features/character/character.dart';
-import 'package:rick_and_morty_app/features/favorites/bloc/bloc/favorites_bloc.dart';
+import 'package:rick_and_morty_app/features/widgets/CharacterCardWrapper_widget.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});
@@ -41,12 +41,19 @@ class _CharacterPageState extends State<CharacterPage> {
         builder: (context, state) {
           if (state is CharacterLoading) {
             return Center(child: CircularProgressIndicator());
+          } else if (state is CharacterError) {
+            return const Center(
+              child: Text('Нет интернета и локалный кэш пуст.'),
+            );
           } else if (state is CharacterLoaded) {
             final characters = state.character;
             final isLoadingMore = !state.hasReachedEnd;
-            return ListView.builder(
+
+            return ListView.separated(
               controller: _scrollController,
+              separatorBuilder: (context, index) => const Divider(height: 1),
               itemCount: characters.length + (isLoadingMore ? 1 : 0),
+
               itemBuilder: (context, index) {
                 if (index >= characters.length) {
                   return const Padding(
@@ -55,42 +62,12 @@ class _CharacterPageState extends State<CharacterPage> {
                   );
                 }
                 final character = characters[index];
-                return BlocBuilder<FavoritesBloc, FavoritesState>(
-                  builder: (context, favstate) {
-                    final isFavorite =
-                        favstate is FavoritesLoaded &&
-                        favstate.favorites.any((c) => c.id == character.id);
-                    return ListTile(
-                      leading: Image.network(
-                        character.image,
-                        width: 50,
-                        height: 50,
-                      ),
-                      title: Text(character.name),
-                      subtitle: Text(
-                        '${character.status}-${character.species}',
-                      ),
-                      trailing: IconButton(
-                        onPressed: () {
-                          final bloc = context.read<FavoritesBloc>();
-                          if (isFavorite) {
-                            bloc.add(RemoveFavorites(character: character));
-                          } else {
-                            bloc.add(AddFavorites(character: character));
-                          }
-                        },
-                        icon: Icon(
-                          isFavorite ? Icons.star : Icons.star_border,
-                          color: isFavorite ? Colors.amber : null,
-                        ),
-                      ),
-                    );
-                  },
+                return CharacterCardWrapperWidget(
+                  character: character,
+                  icon: Icons.star,
                 );
               },
             );
-          } else if (state is CharacterError) {
-            return const Center(child: Text('Ошибка загрузки'));
           }
           return SizedBox.shrink();
         },
