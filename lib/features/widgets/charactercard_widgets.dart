@@ -52,7 +52,7 @@ class CharactercardWidgets extends StatelessWidget {
                     return Container(
                       width: 80,
                       height: 80,
-                      color: theme.dividerColor.withOpacity(0.2),
+                      color: theme.dividerColor,
                       child: Icon(
                         Icons.person,
                         size: 48,
@@ -73,7 +73,7 @@ class CharactercardWidgets extends StatelessWidget {
                       '${character.status} • ${character.species}',
                       style: theme.textTheme.bodyMedium,
                     ),
-                    if (character.location != null) ...[
+                    ...[
                       const SizedBox(height: 4),
                       Text(
                         'Локация: ${character.location}',
@@ -89,9 +89,7 @@ class CharactercardWidgets extends StatelessWidget {
                 icon: Icon(
                   isFavorite ? icon : Icons.star_border,
                   color:
-                      isFavorite
-                          ? theme.primaryColor
-                          : theme.iconTheme.color?.withOpacity(0.6),
+                      isFavorite ? theme.primaryColor : theme.iconTheme.color,
                 ),
                 tooltip:
                     isFavorite

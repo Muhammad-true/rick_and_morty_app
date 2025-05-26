@@ -1,10 +1,10 @@
-//можно было и через блок вообще по хорошему делать или узнать в избранном или нет ,пока так..
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty_app/core/models/character.dart';
 import 'package:rick_and_morty_app/features/favorites/bloc/bloc/favorites_bloc.dart';
 import 'package:rick_and_morty_app/features/widgets/charactercard_widgets.dart';
 
+//можно было и через блок вообще по хорошему делать или узнать в избранном или нет ,пока так..
 class CharacterCardWrapperWidget extends StatelessWidget {
   final Character character;
   final IconData icon;

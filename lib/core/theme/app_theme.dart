@@ -66,7 +66,7 @@ class AppTheme {
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: _lightPrimary,
-        inactiveTrackColor: _lightIconInactive.withOpacity(0.3),
+        inactiveTrackColor: _lightIconInactive,
         thumbColor: _lightPrimary,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
